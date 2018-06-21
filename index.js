@@ -41,7 +41,7 @@ server.get('/getData', function(request, response){
 	response.render('results.ejs', {result:result});
 } );
 
-server.listen (8888, () => { console.log("Listening on port 8888");});
+server.listen (process.env.PORT || 8888, () => { console.log("Listening on port 8888");});
 function calcPostageLettersStamped(weight){
 	if (weight == 1){
 		return 0.50;
