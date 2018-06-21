@@ -1,11 +1,18 @@
 var express = require('express');
 var server = express();
+var path = require('path');
 var bodyParser = require('body-parser');
 
 
-server.use('/', express.static('static'));
+server.use(express.static('public'));
 
-server.use(bodyParser());
+server.use(bodyParser.urlencoded({
+   extended: false
+}));
+
+server.use(bodyParser.json());
+
+
 
 server.set('view engine', 'ejs');
 server.set('views', __dirname + '/views');
@@ -14,9 +21,9 @@ server.get('/getData', function(request, response){
 
 	//
 	var result;
-	weight = Number(request.body.weight);
-
-	switch(Number(request.body.type)){
+	weight = Number(request.query.weight);
+	console.log('weight =' + weight);
+	switch(Number(request.query.letter)){
 		case 1 :
 		result = calcPostageLettersStamped(weight);
 		break;
@@ -30,8 +37,11 @@ server.get('/getData', function(request, response){
 		result = calPostageFirstClass(weight);
 		break;
 	}
+	console.log('result=' + result);
+	response.render('results.ejs', {result:result});
 } );
 
+server.listen (8888, () => { console.log("Listening on port 8888");});
 function calcPostageLettersStamped(weight){
 	if (weight == 1){
 		return 0.50;
