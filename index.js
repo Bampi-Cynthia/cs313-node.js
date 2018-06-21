@@ -1,14 +1,36 @@
 var express = require('express');
-var app = express();
+var server = express();
 var bodyParser = require('body-parser');
 
 
-app.use('/', express.static('static'));
+server.use('/', express.static('static'));
 
-app.use(bodyParser());
+server.use(bodyParser());
 
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+server.set('view engine', 'ejs');
+server.set('views', __dirname + '/views');
+
+server.get('/getData', function(request, response){
+
+	//
+	var result;
+	weight = Number(request.body.weight);
+
+	switch(Number(request.body.type)){
+		case 1 :
+		result = calcPostageLettersStamped(weight);
+		break;
+		case 2 :
+		result = calcPostageLettersMetered(weight);
+		break;
+		case 3 :
+		result = calcPostageLargeEnvelopes(weight);
+		break;
+		case 4 :
+		result = calPostageFirstClass(weight);
+		break;
+	}
+} );
 
 function calcPostageLettersStamped(weight){
 	if (weight == 1){
@@ -138,23 +160,3 @@ function calPostageFirstClass(weight){
 
 
 
-app.post('/getData', function(request, response){
-
-	//
-	var result,
-	weight = Number(request.body.weight);
-
-	switch(Number(request.body.type)){
-		case 1 :
-		result = calcPostageLettersStamped(weight);
-		break;
-		case 2 :
-		result = calcPostageLettersMetered(weight);
-		break;
-		case 3 :
-		result = calcPostageLargeEnvelopes(weight);
-		break;
-		case 4 :
-		result = calPostageFirstClass(weight);
-		break;
-	}
